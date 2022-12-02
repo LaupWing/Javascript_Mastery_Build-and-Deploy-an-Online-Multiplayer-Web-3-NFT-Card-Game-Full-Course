@@ -73,7 +73,48 @@ contract AVAXGods is ERC1155, Ownable, ERC1155Supply {
    }
 
    function isPlayerToken(address player) public view returns (bool) {
-      
+      if(playerTokenInfo[player] == 0){
+         return false;
+      } else {
+         return true;
+      }
+   }
+
+   function getAllPlayerTokens() public view returns (GameToken[] memory){
+      return gameTokens;
+   }
+
+   function isBattle(string memory _name) public view returns (bool){
+      if(battleInfo[_name] == 0){
+         return false;
+      }else{
+         return true;
+      }
+   }
+
+   function getBattle(string memory _name) public view returns (Battle memory){
+      require(isBattle(_name), "Battle doesn't exist!");
+      return battles[battleInfo[_name]];
+   }
+
+   function getAllBattles() public view returns (Battle[] memory){
+      return battles;
+   }
+
+   function updateBattle(string memory _name, Battle memory _newBattle) private {
+      require(isBattle(_name), "Battle doesn't exists");
+      battles[battleInfo[_name]] = _newBattle;
+   }
+
+   event NewPlayer(address indexed owner, string name);
+   event NewBattle(string battleName, address indexed player1, address indexed player2);
+   event BattleEnded(string battleName, address indexed winner, address indexed loser);
+   event BattleMove(string indexed battleName, bool indexed isFirstMove);
+   event NewGameToken(address indexed owner, uint256 id, uint256 attackStrength, uint256 defenseStrength);
+   event RoundEnded(address[2] damagedPlayers);
+
+   constructor(string memory _metadataURI) ERC1155(_metadataURI){
+      baseURI = _metadataURI;
    }
 }
 
