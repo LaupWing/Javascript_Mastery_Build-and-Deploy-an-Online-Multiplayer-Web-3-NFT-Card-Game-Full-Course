@@ -115,6 +115,17 @@ contract AVAXGods is ERC1155, Ownable, ERC1155Supply {
 
    constructor(string memory _metadataURI) ERC1155(_metadataURI){
       baseURI = _metadataURI;
+      initialize();
+   }
+
+   function setURI(string memory newuri) public onlyOwner{
+      _setURI(newuri);
+   }
+
+   function initialize() private {
+      gameTokens.push(GameToken("", 0, 0, 0));
+      players.push(Player(address(0), "", 0, 0, false));
+      battles.push(Battle(BattleStatus.PENDING, bytes32(0), "", [address(0), address(0)], [0,0], address(0)));
    }
 }
 
